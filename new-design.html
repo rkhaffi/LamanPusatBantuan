@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Chart & Vue -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="style/new-style.css">
+
+    <title>Laman Pengaduan</title>
+    <link rel="shortcut icon" href="assets/logo-dephan.png" type="image/x-icon">
+</head>
+
+<body>
+    <div id="app">
+        <!-- NAVBAR -->
+        <nav class="navbar p-0 sticky-top">
+            <a class="navbar-brand p-0 m-auto" href="#">
+                <img src="assets/logo-dephan.png" width="60" height="60" class="d-inline-block" alt=""> Pusat Bantuan
+            </a>
+        </nav>
+        <!-- MAIN -->
+        <div class="container-fluid">
+            <!-- ATAS -->
+            <div class="row mt-lg-3">
+                <div class="col-lg-6">
+                    <div class="card komplain">
+                        <div class="card-body">
+                            <!-- ISI KOMPLAIN -->
+                            <div class="komplain">
+                                <div class="card" v-for="(data,i) in arrayTimeline" v-bind:href="data.url_timeline">
+                                    <div class="card-header bg-secondary text-white">
+                                        <i><img class="mr-1 d-inline-block" src="assets/user.png" width="30" height="30"></i>{{data.new_title_timeline}}
+                                        <i class="float-right"><img class="mr-1 d-inline-block" src="assets/time.png" width="30" height="30">{{data.new_timestamp_timeline}}</i>
+                                    </div>
+                                    <div class="card-body">
+                                        <blockquote class="blockquote">
+                                            {{data.detail_timeline}}
+                                        </blockquote>
+                                        <footer class="float-right">Nomor Laporan : {{data.sumber_data_timeline}}</footer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myPieChart1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- BAWAH -->
+            <div class="row mt-lg-2">
+                <div class="col-lg-6">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myLineTicketChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myLineRegisChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="page-footer font-small bg-dark fixed-bottom p-0">
+            <!-- Copyright -->
+            <div class="footer-copyright text-center">
+                <p class="m-0">© 2021 Copyright:Tel-Access V1 All Rights Reserved</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                myLineChart: null,
+                myLineChart1: null,
+                myPieChart: null,
+                myPieChart1: null,
+                arrayTimeline: [],
+                //merge Label
+                labelMergeToday: [],
+                labelMergeMonth: [],
+                isMobile: null
+
+            },
+            methods: {
+                updateChartDavid() {
+                    let self = this
+                    Chart.defaults.global.legend.labels.usePointStyle = true;
+                    Chart.defaults.global.defaultFontColor = 'black';
+                    Chart.defaults.global.defaultFontSize = 16;
+
+                    $.ajax({
+                        url: "https://komcad.com/dialogflow/geni_papan.php",
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            console.log(data);
+                            let mergeLabelTempToday = '';
+                            let mergeLabelTempMonth = '';
+
+                            if (data != '') {
+                                self.labelMergeToday = [];
+                                self.labelMergeMonth = [];
+                                let dataTimeline = data.timeline;
+                                for (i = 0; i < data.pie_ticket_month_value.length; i++) {
+                                    if (data.pie_ticket_month_cat != null) {
+                                        mergeLabelTempMonth = data.pie_ticket_month_cat[i] + ' ' + '(' + String(data.pie_ticket_month_value[i]) + ')';
+                                    }
+
+                                    self.labelMergeMonth.push(mergeLabelTempMonth);
+                                }
+                                for (i = 0; i < data.pie_ticket_today_value.length; i++) {
+                                    if (data.pie_ticket_today_cat != null) {
+                                        mergeLabelTempToday = data.pie_ticket_today_cat[i] + ' ' + '(' + String(data.pie_ticket_today_value[i]) + ')';
+                                    }
+                                    self.labelMergeToday.push(mergeLabelTempToday);
+                                }
+
+                                self.myLineChart.data.labels = data.line_ticket_open_close.x_axis;
+                                self.myLineChart.data.datasets[0].data = data.line_ticket_open_close.closed_ticket;
+                                self.myLineChart.data.datasets[1].data = data.line_ticket_open_close.open_ticket;
+                                self.myPieChart.data.datasets[0].data = data.pie_ticket_today_value;
+                                self.myPieChart.data.labels = self.labelMergeToday;
+                                self.myPieChart1.data.labels = self.labelMergeMonth;
+                                self.myPieChart1.data.datasets[0].data = data.pie_ticket_month_value;
+                                self.myLineChart1.data.labels = data.line_ticket.x_axis;
+                                self.myLineChart1.data.datasets[0].data = data.line_ticket.line_ticket_total;
+                                self.myPieChart1.update();
+                                self.myPieChart.update();
+                                self.myLineChart.update();
+                                self.myLineChart1.update();
+
+
+                                dataTimeline.forEach(function(element) {
+                                    let tempNewTimestamp = element.timestamp_timeline.split(" ").reverse()
+                                    let tempNewTitle = element.title_timeline.split(" ")
+                                    element.new_timestamp_timeline = self.parsingDate(tempNewTimestamp[1]) + ' ' + tempNewTimestamp[0]
+                                    element.new_title_timeline = "NRK" + " " + tempNewTitle[1]
+                                })
+                                self.arrayTimeline = dataTimeline;
+                            }
+
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    })
+                },
+                parsingDate(data) {
+                    let tmp = data.split("-").reverse()
+                    return tmp[0] + "-" + tmp[1] + "-" + tmp[2]
+
+                },
+                getChartLineRegis() {
+                    var ctx2 = document.getElementById('myLineRegisChart').getContext('2d');
+                    // Line Charts
+                    this.myLineChart1 = new Chart(ctx2, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Total',
+                                data: [],
+                                borderWidth: 2,
+                                borderColor: 'rgba(128,0,128, 0.5)',
+                                backgroundColor: 'rgba(0,0,0,0)'
+                            }]
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Total Laporan Pengaduan',
+                                fontSize: 18
+                            },
+                            scales: {
+                                yAxes: [{
+                                    stacked: false,
+                                    ticks: {
+                                        beginAtZero: true,
+                                        userCallback: function(label, index, labels) {
+                                            // when the floored value is the same as the value we have a whole number
+                                            if (Math.floor(label) === label) {
+                                                return label;
+                                            }
+                                        }
+                                    }
+                                }]
+                            },
+                            maintainAspectRatio: false
+                        }
+                    })
+                },
+                getChartPieDavid() {
+                    var ctx1 = document.getElementById('myPieChart').getContext('2d');
+
+                    this.myPieChart = new Chart(ctx1, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [],
+                                backgroundColor: ['rgba(200, 53, 53, 1)', 'rgba(53, 138, 200 , 1)', 'rgba(53, 200, 93 , 1)', 'rgba(200, 195, 53 ,1)'],
+                                label: 'Laporan Pengaduan Hari Ini'
+                            }],
+                            labels: []
+                        },
+                        options: {
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: 'Laporan Pengaduan Hari Ini',
+                                fontSize: 18
+                            },
+                            maintainAspectRatio: false
+                        }
+                    })
+                },
+                getChartPieDavid1() {
+                    var ctx3 = document.getElementById('myPieChart1').getContext('2d');
+
+                    this.myPieChart1 = new Chart(ctx3, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [],
+                                backgroundColor: ['rgba(200, 53, 53, 1)', 'rgba(53, 138, 200 , 1)', 'rgba(53, 200, 93 , 1)', 'rgba(200, 195, 53 ,1)'],
+                                label: 'Laporan Pengaduan Bulan Ini'
+                            }],
+                            labels: []
+                        },
+                        options: {
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: 'Laporan Pengaduan Bulan Ini',
+                                fontSize: 18
+                            },
+                            maintainAspectRatio: false
+                        }
+                    })
+                },
+                getChartLineDavid() {
+                    var ctx = document.getElementById('myLineTicketChart').getContext('2d');
+                    // Line Charts
+                    this.myLineChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Belum Selesai',
+                                data: [],
+                                borderWidth: 2,
+                                borderColor: 'rgba(255, 0, 0, 0.5)',
+                                backgroundColor: 'rgba(0,0,0,0)'
+                            }, {
+                                label: 'Telah Selesai',
+                                data: [],
+                                borderWidth: 2,
+                                borderColor: 'rgba(0,0,255,0.5)',
+                                backgroundColor: 'rgba(0,0,0,0)'
+                            }]
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'Status Laporan Pengaduan',
+                                fontSize: 18
+                            },
+                            scales: {
+                                yAxes: [{
+                                    stacked: false,
+                                    beginAtZero: true,
+                                    userCallback: function(label, index, labels) {
+                                        // when the floored value is the same as the value we have a whole number
+                                        if (Math.floor(label) === label) {
+                                            return label;
+                                        }
+                                    }
+                                }]
+                            },
+                            maintainAspectRatio: false
+                        }
+                    })
+                },
+            },
+            mounted() {
+                // if ($(window).width() < 960) {
+                //     $("#chart").removeClass("sticky")
+                //     $("#firstCard").css("margin-top", "2vh")
+                //     this.isMobile = true;
+                // } else {
+                //     this.isMobile = false;
+                // }
+                this.getChartPieDavid1()
+                this.getChartPieDavid()
+                this.getChartLineDavid()
+                this.getChartLineRegis()
+                this.updateChartDavid()
+                setInterval(this.updateChartDavid, 2000);
+            }
+        });
+    </script>
+
+
+
+</body>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+</script>
+</body>
+
+</html>
