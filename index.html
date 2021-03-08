@@ -18,7 +18,7 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="style/styles.css">
+    <link rel="stylesheet" href="style/new-style.css">
 
     <title>Laman Pengaduan</title>
     <link rel="shortcut icon" href="assets/logo-dephan.png" type="image/x-icon">
@@ -34,17 +34,17 @@
         </nav>
         <!-- MAIN -->
         <div class="container-fluid">
-            <div class="row">
-                <!-- SEPARATOR -->
-                <div class="col-lg-6 p-1">
-                    <!-- KONTEN -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="laporan">
+            <!-- ATAS -->
+            <div class="row mt-lg-3">
+                <div class="col-lg-6">
+                    <div class="card komplain">
+                        <div class="card-body">
+                            <!-- ISI KOMPLAIN -->
+                            <div class="komplain">
                                 <div class="card" v-for="(data,i) in arrayTimeline" v-bind:href="data.url_timeline">
                                     <div class="card-header bg-secondary text-white">
-                                        <i><img class="mr-1 d-inline-block" src="assets/user.svg" width="30" height="30"></i>{{data.new_title_timeline}}
-                                        <i class="float-right"><img class="mr-1 d-inline-block" src="assets/wall-clock.svg" width="30" height="30">{{data.new_timestamp_timeline}}</i>
+                                        <i><img class="mr-1 d-inline-block" src="assets/user.png" width="30" height="30"></i>{{data.new_title_timeline}}
+                                        <i class="float-right"><img class="mr-1 d-inline-block" src="assets/time.png" width="30" height="30">{{data.new_timestamp_timeline}}</i>
                                     </div>
                                     <div class="card-body">
                                         <blockquote class="blockquote">
@@ -57,66 +57,56 @@
                         </div>
                     </div>
                 </div>
-                <!-- SEPARATOR -->
-                <div class="col-lg-6 chart">
-                    <!-- KONTEN CHART -->
-                    <div class="row">
-                        <div class="col-lg-6  p-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="myPieChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6  p-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="myPieChart1"></canvas>
-                                    </div>
-                                </div>
+                <div class="col-lg-3">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myPieChart"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6 mt-lg-1 p-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="myLineTicketChart"></canvas>
-                                    </div>
-                                </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myPieChart1"></canvas>
                             </div>
                         </div>
-                        <div class="col-lg-6 mt-lg-1 p-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="myLineRegisChart"></canvas>
-                                    </div>
-                                </div>
+                    </div>
+                </div>
+            </div>
+            <!-- BAWAH -->
+            <div class="row mt-lg-2">
+                <div class="col-lg-6">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myLineTicketChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card chart">
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myLineRegisChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Footer -->
+        <footer class="page-footer font-small bg-dark fixed-bottom p-0">
+            <!-- Copyright -->
+            <div class="footer-copyright text-center">
+                <p class="m-0">© 2021 Copyright:Tel-Access V1 All Rights Reserved</p>
+            </div>
+        </footer>
+
     </div>
-    <!-- Footer -->
-    <footer class="page-footer font-small bg-dark fixed-bottom p-0">
-
-        <!-- Copyright -->
-        <div class="footer-copyright text-center">
-            <p class="m-0">© 2021 Copyright:Tel-Access V1 All Rights Reserved</p>
-        </div>
-        <!-- Copyright -->
-
-    </footer>
-    <!-- Footer -->
-
-
 
     <!-- JavaScript -->
     <script>
@@ -353,13 +343,15 @@
     </script>
 
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
+
+</body>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+</script>
 </body>
 
 </html>
